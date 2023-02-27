@@ -1,3 +1,3 @@
 from .anime import AnimeScraper
-from .review import Review
-from .user import User
+from .review import ReviewScraper
+from .user import UserScraper
