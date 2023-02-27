@@ -22,4 +22,4 @@ filters = soup.select('.genre-link')
 genres = [item for f in filters[:2] for item in f.select('.genre-name-link')]
 
 # Start anime scraper
-anime_scraper = AnimeScraper(get_types(genres))
+AnimeScraper(get_types(genres))
