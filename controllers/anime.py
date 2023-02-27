@@ -81,16 +81,7 @@ class AnimeScraper(BaseScraper):
         info['ranked'] = self.driver.find_element(By.CSS_SELECTOR, '.ranked strong').text
         # Streaming Platforms
         info['platforms'] = list(map(lambda x:x.text, self.driver.find_elements(By.CSS_SELECTOR, '.broadcast .caption')))
+        # Synopsis
         info['synopsis'] = self.driver.find_element(By.XPATH, '//p[contains(@itemprop,"description")]').text.replace('\n', ' ')
         info['synopsis'] = info['synopsis'][:info['synopsis'].index("[")].strip() if "[]" in info['synopsis'] else info['synopsis']
         return info
-
-    def scrape_anime_characters():
-        pass
-
-    def scrape_anime_staffs():
-        pass
-
-    def scrape_anime_reviews():
-        pass
-
