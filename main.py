@@ -14,7 +14,7 @@ get_types = lambda types:sorted([{
 } for t in types], key=lambda x:x['pages'])
 
 # Generate anime soup
-page = get('https://myanimelist.net/anime.php')
+page = get(f'{BASE_URL}/anime.php')
 soup = BeautifulSoup(page.text, 'html.parser')
 
 # Get anime genres
