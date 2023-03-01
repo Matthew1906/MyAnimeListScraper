@@ -1,4 +1,3 @@
-from json import dump, load
 from pandas import DataFrame
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -6,15 +5,13 @@ from .base import BaseScraper
 
 class AnimeScraper(BaseScraper):
     def __init__(self, genres:list):
-        super().__init__()
-        self.init_checkpoint()
+        super().__init__('animes', 'genres')
+        super().init_checkpoint()
         for genre in genres:
             if genre['name'] in self.checkpoint['genres'] and self.checkpoint['current']!=genre['name']:
                 continue
             print(f"Start genre {genre['name']}")
-            self.checkpoint['current'] = genre['name']
-            self.checkpoint['genres'].append(genre['name'])
-            self.checkpoint['genres'] = list(set(self.checkpoint['genres']))
+            super().restart_checkpoint(genre['name'])
             for page in range(genre['pages']):
                 if genre['name'] in self.checkpoint['current'] and self.checkpoint['page'] != page:
                     continue
@@ -23,34 +20,16 @@ class AnimeScraper(BaseScraper):
                 animes = DataFrame.from_dict([self.get_info(item['link'], item['name']) for item in self.get_items()])
                 animes.to_csv(f'./data/animes/{"_".join(genre["name"].lower().split())}.csv', mode="a", sep=";", header=1 if page==0 else 0)
                 print(f"Finish genre {genre['name']}, page {page+1}")  
-                self.checkpoint['page'] = page+1
-                self.save_checkpoint()
+                super().increment_checkpoint()
                 if input('Continue?[Y]').lower() != 'y':
                     break
             if self.checkpoint['page'] != genre['pages']:
                 break
             print(f"Finish genre {genre['name']}")
-            self.checkpoint['current'] = ""
-            self.checkpoint['page'] = 0
-            self.save_checkpoint()
+            super().reset_checkpoint()
             if input('Continue?[Y]').lower() != 'y':
                 break
         
-    def init_checkpoint(self):
-        try:
-            with open('./data/animes/checkpoint.json', 'r') as fp:
-                self.checkpoint = load(fp)
-        except FileNotFoundError:
-            self.checkpoint = {
-                'genres':[], # Keep track of all scraped genres
-                'current': "", # Keep track of currently being scraped genre
-                'page':0 # Keep track of page
-            }
-
-    def save_checkpoint(self):
-        with open('./data/animes/checkpoint.json', 'w') as fp:
-            dump(self.checkpoint, fp)
-
     def get_items(self):
         sleep(10)
         contents= self.driver.find_elements(By.CSS_SELECTOR, '.seasonal-anime')
