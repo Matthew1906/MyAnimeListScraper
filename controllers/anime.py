@@ -20,7 +20,7 @@ class AnimeScraper(BaseScraper):
                 animes = DataFrame.from_dict([self.get_info(item['link'], item['name']) for item in self.get_items()])
                 animes.to_csv(f'./data/animes/{"_".join(genre["name"].lower().split())}.csv', mode="a", sep=";", header=1 if page==0 else 0)
                 print(f"Finish genre {genre['name']}, page {page+1}")  
-                super().increment_checkpoint()
+                super().increment_checkpoint(page)
                 if input('Continue?[Y]').lower() != 'y':
                     break
             if self.checkpoint['page'] != genre['pages']:

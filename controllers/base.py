@@ -1,3 +1,4 @@
+from json import dump, load
 from selenium.webdriver import Chrome, ChromeOptions
 
 class BaseScraper:
@@ -16,8 +17,8 @@ class BaseScraper:
                 self.checkpoint = load(fp)
         except FileNotFoundError:
             self.checkpoint = {
-                f'{self.filters}':[], # Keep track of all scraped genres
-                'current': "", # Keep track of currently being scraped genre
+                f'{self.filters}':[], # Keep track of all scraped filters
+                'current': "", # Keep track of currently being scraped filter
                 'page':0 # Keep track of page
             }
 
@@ -26,7 +27,7 @@ class BaseScraper:
         self.checkpoint[self.filters].append(name)
         self.checkpoint[self.filters] = list(set(self.checkpoint[self.filters]))
 
-    def increment_checkpoint(self):
+    def increment_checkpoint(self, page:int):
         self.checkpoint['page'] = page+1
         self.save_checkpoint()
 
