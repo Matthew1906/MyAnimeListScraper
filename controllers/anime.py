@@ -11,7 +11,7 @@ class AnimeScraper(BaseScraper):
             if genre['name'] in self.checkpoint['genres'] and self.checkpoint['current']!=genre['name']:
                 continue
             print(f"Start genre {genre['name']}")
-            super().restart_checkpoint(genre['name'])
+            super().start_checkpoint(genre['name'])
             for page in range(genre['pages']):
                 if genre['name'] in self.checkpoint['current'] and self.checkpoint['page'] != page:
                     continue
@@ -31,6 +31,7 @@ class AnimeScraper(BaseScraper):
                 break
         
     def get_items(self):
+        '''Retrieve a list of anime name and the link to the anime page'''
         sleep(10)
         contents= self.driver.find_elements(By.CSS_SELECTOR, '.seasonal-anime')
         return [{
@@ -39,6 +40,7 @@ class AnimeScraper(BaseScraper):
         } for content in contents]
 
     def get_info(self, link:str, title:str):
+        '''Retrieve all information of an anime'''
         print(f"Scraping {title}")
         info = {'title':title, 'link':link}
         self.driver.get(link)
