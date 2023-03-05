@@ -2,7 +2,51 @@ from json import dump, load
 from selenium.webdriver import Chrome, ChromeOptions
 
 class BaseScraper:
+    """
+    A class used to represent the Base Scraper. 
+    
+    This class contains the initialization of the Selenium Webdriver 
+    and methods related to the checkpoint system used to keep track 
+    of scraped items.
+
+    Attributes
+    ----------
+    drive : ChromeDriver
+        the webdriver to move around the web using Selenium.
+    path : str
+        the folder name to save the scraping results and the type of data you are currently scraping.
+    filters : str
+        the filter name for the checkpoint.
+    checkpoint : dict
+        the dictionary object to store the current scraping progress.
+    
+    Methods
+    -------
+    init_checkpoint()
+        Initializes the checkpoint for the scraper.
+    
+    start_checkpoint(name)
+        Updates the checkpoint current filter.
+    
+    increment_checkpoint(page)
+        Increment the page value for the checkpoint.
+    
+    reset_checkpoint()
+        Reset the current value when the scraping of a certain filter is completed.
+    
+    save_checkpoint()
+        Saves the current checkpoint.
+
+    """
     def __init__(self, path:str, filters:str):
+        """
+        Parameters
+        ----------
+        path : str
+            the folder name to save the scraping results
+        filters : str
+            the filter name for the checkpoint
+        """
         options = ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         options.add_argument("--headless")
@@ -12,7 +56,12 @@ class BaseScraper:
         self.filters = filters
 
     def init_checkpoint(self):
-        '''Initialize a checkpoint'''
+        '''Initializes the checkpoint for the scraper
+        
+        This method will check if a checkpoint file already exists.
+        If a checkpoint file already exists, it will simply load them
+        using json.load(). If it doesn't, create a new dict.
+        '''
         try:
             with open(f'./data/{self.path}/checkpoint.json', 'r') as fp:
                 self.checkpoint = load(fp)
@@ -24,23 +73,49 @@ class BaseScraper:
             }
 
     def start_checkpoint(self, name:str):
-        '''Start a checkpoint for a new filter'''
+        '''Updates the checkpoint current filter
+        
+        This method will update the 'current' key on the checkpoint
+        to show that a certain filter is currently being scraped.
+        This method will also add the filter name into the list
+        of filters. This list stores all scraped filters.
+
+        Parameters
+        ----------
+        name : str
+            the filter name to update the current filter in checkpoint 
+        '''
         self.checkpoint['current'] = name
         self.checkpoint[self.filters].append(name)
+        # Use set() to make sure that the filters are all unique
         self.checkpoint[self.filters] = list(set(self.checkpoint[self.filters]))
 
     def increment_checkpoint(self, page:int):
-        '''Increment a page for the checkpoint (if there are any pages involved)'''
+        '''Increment the page value for the checkpoint
+        
+        This method will increment the page for the checkpoint, so that
+        when the user starts the scraper, it will just scrape the next page
+
+        Parameters
+        ----------
+        page : int
+            the page number (starts from 0)
+        '''
         self.checkpoint['page'] = page+1
         self.save_checkpoint()
 
     def reset_checkpoint(self):
-        '''Reset the checkpoint'''
+        '''Reset the current value when the scraping of a certain filter is completed'''
         self.checkpoint['current'] = ""
         self.checkpoint['page'] = 0
         self.save_checkpoint()
 
     def save_checkpoint(self):
-        '''Save current checkpoint'''
+        '''Save current checkpoint
+        
+        This method will save the checkpoint to the folder based on 
+        the path value. This value basically tells you the type of 
+        things you are currently scraping.
+        '''
         with open(f'./data/{self.path}/checkpoint.json', 'w') as fp:
             dump(self.checkpoint, fp)
