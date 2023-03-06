@@ -27,8 +27,8 @@ def get_animes():
     soup = BeautifulSoup(page.text, 'html.parser')
     # Get anime genres using soup
     filters = soup.select('.genre-link')
-    genres = [item for f in filters[:2] for item in f.select('.genre-name-link')]
+    genres = get_types([item for f in filters[:2] for item in f.select('.genre-name-link')])
     # Start anime scraper
-    AnimeScraper(get_types(genres))
+    AnimeScraper().scrape_info(genres)
 
 get_animes()

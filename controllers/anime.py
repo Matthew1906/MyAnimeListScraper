@@ -12,19 +12,23 @@ class AnimeScraper(BaseScraper):
 
     Methods
     -------
+    scrape_info(genres)
+        Scrape all animes
     get_items()->list
         Get all anime titles and links in a page.
     get_info(link, title)->dict
         Retrieve all information of an anime.
     """
-    def __init__(self, genres:list):
+    def __init__(self):
+        super().__init__('animes', 'genres')
+        
+    def scrape_info(self, genres:list):
         """
         Parameters
         ----------
         genres : list
             the list of genres to scrape the animes
         """
-        super().__init__('animes', 'genres')
         super().init_checkpoint()
         for genre in genres:
             # Skip a genre if it's already scraped
@@ -57,7 +61,7 @@ class AnimeScraper(BaseScraper):
             # Skip prompt
             if input('Continue?[Y]').lower() != 'y':
                 break
-        
+
     def get_items(self)->list:
         ''' 
         Get all anime titles and links in a page and formats them into a list of dictionaries.
