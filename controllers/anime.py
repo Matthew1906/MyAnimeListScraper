@@ -42,13 +42,13 @@ class AnimeScraper(BaseScraper):
                 # Skip a page if it's already scraped
                 if genre['name'] in self.checkpoint['current'] and self.checkpoint['page'] != page:
                     continue
-                print(f"Start genre {genre['name']}, page {page+1}")
+                print(f"Start genre {genre['name']}, page {page+1}/{genre['pages']}")
                 self.driver.get(f"{genre['link']}?page={page+1}")
                 # Scrape anime information and save it to CSV 
                 animes = DataFrame.from_dict([self.get_info(item['link'], item['name']) for item in self.get_items()])
                 animes.to_csv(f'./data/animes/{"_".join(genre["name"].lower().split())}.csv', mode="a", sep=";", header=1 if page==0 else 0)
                 # Update the page checkpoint
-                print(f"Finish genre {genre['name']}, page {page+1}")  
+                print(f"Finish genre {genre['name']}, page {page+1}/{genre['pages']}")  
                 super().increment_checkpoint(page)
                 # Skip prompt
                 if input('Continue?[Y]').lower() != 'y':
