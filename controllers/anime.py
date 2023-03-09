@@ -22,7 +22,7 @@ class AnimeScraper(BaseScraper):
     def __init__(self):
         super().__init__('animes', 'genres')
         
-    def scrape_info(self, genres:list):
+    def scrape_info(self, genres:list)->None:
         """
         Parameters
         ----------

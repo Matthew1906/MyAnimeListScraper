@@ -55,7 +55,7 @@ class BaseScraper:
         self.path = path
         self.filters = filters
 
-    def init_checkpoint(self):
+    def init_checkpoint(self)->None:
         '''Initializes the checkpoint for the scraper
         
         This method will check if a checkpoint file already exists.
@@ -72,7 +72,7 @@ class BaseScraper:
                 'page':0 # Keep track of page
             }
 
-    def start_checkpoint(self, name:str):
+    def start_checkpoint(self, name:str)->None:
         '''Updates the checkpoint current filter
         
         This method will update the 'current' key on the checkpoint
@@ -90,7 +90,7 @@ class BaseScraper:
         # Use set() to make sure that the filters are all unique
         self.checkpoint[self.filters] = list(set(self.checkpoint[self.filters]))
 
-    def increment_checkpoint(self, page:int):
+    def increment_checkpoint(self, page:int)->None:
         '''Increment the page value for the checkpoint
         
         This method will increment the page for the checkpoint, so that
@@ -104,13 +104,13 @@ class BaseScraper:
         self.checkpoint['page'] = page+1
         self.save_checkpoint()
 
-    def reset_checkpoint(self):
+    def reset_checkpoint(self)->None:
         '''Reset the current value when the scraping of a certain filter is completed'''
         self.checkpoint['current'] = ""
         self.checkpoint['page'] = 0
         self.save_checkpoint()
 
-    def save_checkpoint(self):
+    def save_checkpoint(self)->None:
         '''Save current checkpoint
         
         This method will save the checkpoint to the folder based on 

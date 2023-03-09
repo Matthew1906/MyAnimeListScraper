@@ -7,7 +7,7 @@ from requests import get
 BASE_URL = 'https://myanimelist.net'
 
 # Scrape animes
-def get_animes():
+def get_animes()->None:
     '''
     Scrape all animes
 
