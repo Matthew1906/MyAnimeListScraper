@@ -60,7 +60,7 @@ class BaseScraper:
         
         This method will check if a checkpoint file already exists.
         If a checkpoint file already exists, it will simply load them
-        using json.load(). If it doesn't, create a new dict.
+        using json.load(). If it doesn't, create a new dictionary.
         '''
         try:
             with open(f'./data/{self.path}/checkpoint.json', 'r') as fp:

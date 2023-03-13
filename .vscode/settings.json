@@ -1,6 +1,8 @@
 {
     "material-icon-theme.folders.associations": {
         "animes":"Animation",
-        "users":"Admin"
+        "clubs":"Cluster",
+        "users":"Admin",
+        "watchlists":"Queue"
     }
 }
