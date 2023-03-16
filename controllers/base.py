@@ -118,4 +118,4 @@ class BaseScraper:
         things you are currently scraping.
         '''
         with open(f'./data/{self.path}/checkpoint.json', 'w') as fp:
-            dump(self.checkpoint, fp)
+            dump(self.checkpoint, fp, indent=4)

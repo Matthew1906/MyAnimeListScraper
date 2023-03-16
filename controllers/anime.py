@@ -21,6 +21,8 @@ class AnimeScraper(BaseScraper):
     """
     def __init__(self):
         super().__init__('animes', 'genres')
+        self.people_path = '/characters'
+        self.review_path = '/reviews'
         
     def scrape_info(self, genres:list)->None:
         """
@@ -51,16 +53,16 @@ class AnimeScraper(BaseScraper):
                 print(f"Finish genre {genre['name']}, page {page+1}/{genre['pages']}")  
                 super().increment_checkpoint(page)
                 # Skip prompt
-                if input('Continue?[Y]').lower() != 'y':
-                    break
+                # if input('Continue?[Y]').lower() != 'y':
+                #     break
             if self.checkpoint['page'] != genre['pages']:
                 break
             # Reset checkpoint
             print(f"Finish genre {genre['name']}")
             super().reset_checkpoint()
             # Skip prompt
-            if input('Continue?[Y]').lower() != 'y':
-                break
+            # if input('Continue?[Y]').lower() != 'y':
+            #     break
 
     def get_items(self)->list:
         ''' 
