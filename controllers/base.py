@@ -38,7 +38,7 @@ class BaseScraper:
         Saves the current checkpoint.
 
     """
-    def __init__(self, path:str, filters:str):
+    def __init__(self, path:str, filters:str="filters"):
         """
         Parameters
         ----------

@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from controllers import AnimeScraper
+from controllers import AnimeScraper, ClubScraper
 from math import ceil
 from requests import get
 
@@ -31,4 +31,13 @@ def get_animes()->None:
     # Start anime scraper
     AnimeScraper().scrape_info(genres)
 
-get_animes()
+# Scrape clubs
+def get_clubs()->None:
+    '''
+    Scrape clubs
+
+    This function will call the ClubScraper() object
+    to scrape all clubs. All clubs will be stored in a CSV file
+    '''
+    ClubScraper().scrape_clubs(url=f'{BASE_URL}/clubs.php?sort=5&p=', pages=10)
+

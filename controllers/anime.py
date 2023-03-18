@@ -52,17 +52,11 @@ class AnimeScraper(BaseScraper):
                 # Update the page checkpoint
                 print(f"Finish genre {genre['name']}, page {page+1}/{genre['pages']}")  
                 super().increment_checkpoint(page)
-                # Skip prompt
-                # if input('Continue?[Y]').lower() != 'y':
-                #     break
             if self.checkpoint['page'] != genre['pages']:
                 break
             # Reset checkpoint
             print(f"Finish genre {genre['name']}")
             super().reset_checkpoint()
-            # Skip prompt
-            # if input('Continue?[Y]').lower() != 'y':
-            #     break
 
     def get_items(self)->list:
         ''' 
