@@ -41,3 +41,4 @@ def get_clubs()->None:
     '''
     ClubScraper().scrape_clubs(url=f'{BASE_URL}/clubs.php?sort=5&p=', pages=10)
 
+get_clubs()

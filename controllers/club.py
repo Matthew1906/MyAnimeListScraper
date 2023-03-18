@@ -1,4 +1,4 @@
-from pandas import DataFrame
+from pandas import DataFrame, read_csv
 from selenium.webdriver.common.by import By
 from time import sleep
 from .base import BaseScraper
@@ -49,3 +49,7 @@ class ClubScraper(BaseScraper):
             super().increment_checkpoint(page)
         print(f"Finish scraping {pages} pages of clubs")
         super().reset_checkpoint()
+        df = read_csv('./data/clubs/clubs.csv', sep=";", na_values="",)
+        df.drop(columns=df.columns[0], axis='columns', inplace=True)
+        df['members'] = df['members'].str.replace(',','').astype('int32')
+        df.to_csv('./data/clubs/clubs.csv', mode="w", sep=";", header=1)
