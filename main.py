@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
-from controllers import AnimeScraper, ClubScraper
+from controllers import AnimeScraper, ClubScraper, UserScraper
 from math import ceil
+from pandas import read_csv
 from requests import get
 
 # Globals
@@ -41,4 +42,10 @@ def get_clubs()->None:
     '''
     ClubScraper().scrape_clubs(url=f'{BASE_URL}/clubs.php?sort=5&p=', pages=10)
 
-get_clubs()
+# Scrape users
+def get_users()->None:
+    clubs = read_csv('./data/clubs/clubs.csv', sep=";", na_values="")
+    clubs.drop(columns=clubs.columns[0], axis='columns', inplace=True)
+    UserScraper().scrape_users(clubs=clubs.to_dict('records'))
+
+get_users()
