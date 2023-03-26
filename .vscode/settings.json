@@ -2,6 +2,7 @@
     "material-icon-theme.folders.associations": {
         "animes":"Animation",
         "clubs":"Cluster",
+        "diagrams":"Config",
         "users":"Admin",
         "watchlists":"Queue"
     }
