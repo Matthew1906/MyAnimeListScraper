@@ -6,8 +6,6 @@ from .base import BaseScraper
 class ClubScraper(BaseScraper):
     """
     A class used to represent the Club Scraper, inherits the BaseScraper.
-    The constructor will execute the scraper and loop through each
-    page and retrieve important club informations.
 
     Methods
     -------
@@ -19,6 +17,8 @@ class ClubScraper(BaseScraper):
 
     def scrape_clubs(self, url:str, pages:int)->None:
         ''' 
+        Scrape clubs
+
         Loop through pages of clubs and retrieve basic club data 
         to help the further scraping processes. The number of clubs 
         retrieved are (50 x pages) clubs

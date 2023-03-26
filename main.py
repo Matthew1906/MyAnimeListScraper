@@ -44,6 +44,14 @@ def get_clubs()->None:
 
 # Scrape users
 def get_users()->None:
+    '''
+    Scrape users
+
+    This function will call the UserScraper() object
+    to scrape all users on the scraped clubs. This scraper 
+    will only scrape at most 1800 users (containing name and link to profile) 
+    for each club.
+    '''
     clubs = read_csv('./data/clubs/clubs.csv', sep=";", na_values="")
     clubs.drop(columns=clubs.columns[0], axis='columns', inplace=True)
     UserScraper().scrape_users(clubs=clubs.to_dict('records'))

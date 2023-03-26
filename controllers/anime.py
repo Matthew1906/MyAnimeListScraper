@@ -6,9 +6,6 @@ from .base import BaseScraper
 class AnimeScraper(BaseScraper):
     """
     A class used to represent the Anime Scraper, inherits the BaseScraper.
-    The constructor will execute the scraper and loop through each
-    genres, access each page, go to the individual anime webpage, scrape all important information
-    of the anime, and save them to the CSV file.
 
     Methods
     -------
@@ -26,6 +23,11 @@ class AnimeScraper(BaseScraper):
         
     def scrape_info(self, genres:list)->None:
         """
+        Scrape Animes
+
+        This method will loop through each genres, access each page, go to the individual anime webpage, scrape all important information 
+        of the anime, and save them to the CSV file.
+
         Parameters
         ----------
         genres : list
