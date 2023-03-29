@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from controllers import AnimeScraper, ClubScraper, UserScraper
+from controllers import AnimeScraper, ClubScraper, ReviewScraper, UserScraper
 from math import ceil
 from pandas import read_csv
 from requests import get
@@ -43,17 +43,21 @@ def get_clubs()->None:
     ClubScraper().scrape_clubs(url=f'{BASE_URL}/clubs.php?sort=5&p=', pages=10)
 
 # Scrape users
-def get_users()->None:
+def get_users_from_clubs()->None:
     '''
     Scrape users
 
     This function will call the UserScraper() object
-    to scrape all users on the scraped clubs. This scraper 
+    to scrape users from the scraped clubs. This scraper 
     will only scrape at most 1800 users (containing name and link to profile) 
     for each club.
     '''
     clubs = read_csv('./data/clubs/clubs.csv', sep=";", na_values="")
     clubs.drop(columns=clubs.columns[0], axis='columns', inplace=True)
-    UserScraper().scrape_users(clubs=clubs.to_dict('records'))
+    UserScraper('clubs/users').scrape_from_clubs(clubs=clubs.to_dict('records'))
 
-get_users()
+def get_reviews_from_animes()->None:
+    animes = read_csv("./data/reviews/animes.csv", sep=";", index_col=0)
+    ReviewScraper().scrape_reviews(animes.to_dict('records'))
+
+get_reviews_from_animes()
