@@ -46,14 +46,17 @@ class AnimeScraper(BaseScraper):
                 # Skip a page if it's already scraped
                 if genre['name'] in self.checkpoint['current'] and self.checkpoint['page'] != page:
                     continue
-                print(f"Start genre {genre['name']}, page {page+1}/{genre['pages']}")
-                self.driver.get(f"{genre['link']}?page={page+1}")
-                # Scrape anime information and save it to CSV 
-                animes = DataFrame.from_dict([self.get_info(item['link'], item['name']) for item in self.get_items()])
-                animes.to_csv(f'./data/animes/{"_".join(genre["name"].lower().split())}.csv', mode="a", sep=";", header=1 if page==0 else 0)
-                # Update the page checkpoint
-                print(f"Finish genre {genre['name']}, page {page+1}/{genre['pages']}")  
-                super().increment_checkpoint(page)
+                try:
+                    print(f"Start genre {genre['name']}, page {page+1}/{genre['pages']}")
+                    self.driver.get(f"{genre['link']}?page={page+1}")
+                    # Scrape anime information and save it to CSV 
+                    animes = DataFrame.from_dict([self.get_info(item['link'], item['name']) for item in self.get_items()])
+                    animes.to_csv(f'./data/animes/{"_".join(genre["name"].lower().split())}.csv', mode="a", sep=";", header=1 if page==0 else 0)
+                    # Update the page checkpoint
+                    print(f"Finish genre {genre['name']}, page {page+1}/{genre['pages']}")  
+                    super().increment_checkpoint(page)
+                except Exception:
+                    pass
             if self.checkpoint['page'] != genre['pages']:
                 break
             # Reset checkpoint
@@ -102,22 +105,51 @@ class AnimeScraper(BaseScraper):
         sleep(4)
         info['image_link'] = self.driver.find_element(By.CSS_SELECTOR, '.content img').get_attribute('src')
         left_stats = self.driver.find_elements(By.CSS_SELECTOR, '.spaceit_pad')
+        stats = {}
+        # Get all stats
         for stat in left_stats:
             if ":" not in stat.text:
                 continue
             text = stat.text.replace("\n", "")
             attr, val = text.split(":", 1)
-            info[attr.strip().lower()] = val.strip()[:1+val.index(")") if ")" in val else len(val)]
-        info['producers'] = list(map(lambda x:x.strip(), info['producers'].split(","))) if info.get('producers', 0)!=0 else None
-        info['genres'] = list(map(lambda x:x.strip(), info['genres'].split(","))) if info.get('genres', 0)!=0 else None
-        info['themes'] = list(map(lambda x:x.strip(), info['themes'].split(","))) if info.get('themes', 0)!=0 else None
-        info['demographic'] = info['demographic'] if info.get('demographic', 0)!=0 else None
+            stats[attr.strip().lower()] = val.strip()[:1+val.index(")") if ")" in val else len(val)]
+        # Format the information
+        get_value = lambda stats, key:stats[key] if stats.get(key, 0)!=0 else 'NOT_EXIST'
+        # Airing information
+        info['duration'] = get_value(stats, 'duration')
+        info['status'] = get_value(stats, 'status')
+        info['aired'] = get_value(stats, 'aired')
+        info['episodes'] = get_value(stats, 'episodes')
+        # Filters 
+        info['type'] = get_value(stats, 'type')
+        info['source'] = get_value(stats, 'source')
+        info['genres'] = list(map(lambda x:x.strip(), stats['genres'].split(","))) if stats.get('genres', 0)!=0 else 'NOT_EXIST'
+        info['themes'] = list(map(lambda x:x.strip(), stats['themes'].split(","))) if stats.get('themes', 0)!=0 else 'NOT_EXIST'
+        info['demographic'] = get_value(stats, 'demographic')
+        # Creators
+        info['producers'] = list(map(lambda x:x.strip(), stats['producers'].split(","))) if stats.get('producers', 0)!=0 else 'NOT_EXIST'
+        info['studios'] = get_value(stats, 'studios')
+        info['licensors'] = get_value(stats, 'licensors')
+        voice_actors = self.driver.find_elements(By.CSS_SELECTOR, '.detail-characters-list .va-t a')
+        info['voice_actors'] = [va.text for va in voice_actors]
+        staffs = self.driver.find_elements(By.CSS_SELECTOR, 'a[name="staff"] ~ .detail-characters-list table')
+        info['staffs'] = list(map(lambda staff:{
+            'name': staff.find_elements(By.TAG_NAME, 'a')[-1].text,
+            'role': staff.find_element(By.TAG_NAME, 'small').text
+        }, staffs)) 
         # Score and Popularity
         info['score'] = self.driver.find_element(By.CSS_SELECTOR, '.spaceit_pad span.score-label').text 
         info['ranked'] = self.driver.find_element(By.CSS_SELECTOR, '.ranked strong').text
+        info['rating'] = get_value(stats, 'rating')
+        info['favorites'] = get_value(stats, 'favorites')
+        info['popularity'] = get_value(stats, 'popularity')
+        info['members'] = get_value(stats, 'members')
         # Streaming Platforms
         info['platforms'] = list(map(lambda x:x.text, self.driver.find_elements(By.CSS_SELECTOR, '.broadcast .caption')))
         # Synopsis
         info['synopsis'] = self.driver.find_element(By.XPATH, '//p[contains(@itemprop,"description")]').text.replace('\n', ' ')
         info['synopsis'] = info['synopsis'][:info['synopsis'].index("[")].strip() if "[]" in info['synopsis'] else info['synopsis']
+        # Synonyms 
+        info['synonyms'] = get_value(stats, 'synonyms')
+        info['japanese'] = get_value(stats, 'japanese')
         return info
