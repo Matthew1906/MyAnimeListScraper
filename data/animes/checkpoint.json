@@ -1,19 +1,23 @@
 {
     "genres": [
-        "Sports",
-        "Boys Love",
-        "Avant Garde",
-        "Supernatural",
         "Hentai",
-        "Ecchi",
-        "Horror",
-        "Gourmet",
+        "Sci-Fi",
         "Erotica",
-        "Suspense",
-        "Award Winning",
+        "Girls Love",
+        "Boys Love",
+        "Slice of Life",
+        "Gourmet",
         "Mystery",
-        "Girls Love"
+        "Avant Garde",
+        "Ecchi",
+        "Drama",
+        "Sports",
+        "Horror",
+        "Supernatural",
+        "Suspense",
+        "Romance",
+        "Award Winning"
     ],
-    "current": "",
-    "page": 0
+    "current": "Sci-Fi",
+    "page": 23
 }
