@@ -45,7 +45,7 @@ def get_clubs()->None:
 # Scrape users
 def get_users_from_clubs()->None:
     '''
-    Scrape users
+    Scrape users from clubs
 
     This function will call the UserScraper() object
     to scrape users from the scraped clubs. This scraper 
@@ -54,10 +54,19 @@ def get_users_from_clubs()->None:
     '''
     clubs = read_csv('./data/clubs/clubs.csv', sep=";", na_values="")
     clubs.drop(columns=clubs.columns[0], axis='columns', inplace=True)
-    UserScraper('clubs/users').scrape_from_clubs(clubs=clubs.to_dict('records'))
+    UserScraper('clubs/users').scrape_from_clubs(clubs.to_dict('records'))
 
 def get_reviews_from_animes()->None:
+    '''
+    Scrape reviews from animes
+
+    This function will call the ReviewScraper() object to scrape 
+    reviews from the scraped animes. This scraper will only retrieve 
+    the top 'Recommended', 'Mixed Feelings', and 'Not Recommended' 
+    reviews while ignoring the reviews with preliminary tag on them 
+    (since preliminary means that the reviewer hasn't finished the anime).
+    '''
     animes = read_csv("./data/reviews/animes.csv", sep=";", index_col=0)
-    ReviewScraper().scrape_reviews(animes.to_dict('records'))
+    ReviewScraper().scrape_from_animes(animes.to_dict('records'))
 
 get_animes()
