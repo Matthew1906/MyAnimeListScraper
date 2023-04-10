@@ -18,8 +18,8 @@ class UserScraper(BaseScraper):
     scrape_from_clubs(clubs)
         Scrape users from clubs
     """
-    def __init__(self, path:str):
-        super().__init__(path, 'clubs')
+    def __init__(self, path:str, filters:str):
+        super().__init__(path, filters)
         
     def scrape_from_clubs(self, clubs:list)->None:
         """

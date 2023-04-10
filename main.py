@@ -54,7 +54,7 @@ def get_users_from_clubs()->None:
     '''
     clubs = read_csv('./data/clubs/clubs.csv', sep=";", na_values="")
     clubs.drop(columns=clubs.columns[0], axis='columns', inplace=True)
-    UserScraper('clubs/users').scrape_from_clubs(clubs.to_dict('records'))
+    UserScraper('clubs/users', 'clubs').scrape_from_clubs(clubs.to_dict('records'))
 
 def get_reviews_from_animes()->None:
     '''
@@ -69,4 +69,4 @@ def get_reviews_from_animes()->None:
     animes = read_csv("./data/reviews/animes.csv", sep=";", index_col=0)
     ReviewScraper().scrape_from_animes(animes.to_dict('records'))
 
-get_animes()
+get_reviews_from_animes()

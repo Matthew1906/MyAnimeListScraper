@@ -28,15 +28,15 @@ class ReviewScraper(BaseScraper):
                 print(f"Start anime {anime['title']}")
                 super().start_checkpoint(anime['title'])
                 if self.checkpoint['page'] < 1:
-                    print(f"Scraping recommended reviews for {anime['title']}")
-                    self.get_reviews_from_anime(anime['title'], f"{anime['link']}/reviews?preliminary=off{self.recommended}") 
+                    res = self.get_reviews_from_anime(anime['title'], f"{anime['link']}/reviews?preliminary={anime['preliminary']}{self.recommended}") 
+                    print(f"Scraped {res} recommended reviews for {anime['title']}")
                     super().increment_checkpoint(0)
                 if self.checkpoint['page']<2:
-                    print(f"Scraping mixed-feelings reviews for {anime['title']}")
-                    self.get_reviews_from_anime(anime['title'], f"{anime['link']}/reviews?preliminary=off{self.mixed_feelings}")
+                    res = self.get_reviews_from_anime(anime['title'], f"{anime['link']}/reviews?preliminary={anime['preliminary']}{self.mixed_feelings}")
+                    print(f"Scraped {res} mixed-feelings reviews for {anime['title']}")
                     super().increment_checkpoint(1)
-                print(f"Scraping not recommended reviews for {anime['title']}")
-                self.get_reviews_from_anime(anime['title'], f"{anime['link']}/reviews?preliminary=off{self.not_recommended}")
+                res = self.get_reviews_from_anime(anime['title'], f"{anime['link']}/reviews?preliminary={anime['preliminary']}{self.not_recommended}")
+                print(f"Scraped {res} not recommended reviews for {anime['title']}")
                 super().increment_checkpoint(2)
                 print(f"Finish anime {anime['title']}")
                 super().reset_checkpoint()
@@ -50,17 +50,18 @@ class ReviewScraper(BaseScraper):
         DataFrame().\
         from_dict([self.get_review_from_anime(review, anime) for review in reviews]).\
         to_csv(
-            './data/reviews/reviews2.csv', 
+            './data/reviews/reviews3.csv', 
             mode='a', sep=';', 
             header=0
         )
+        return len(reviews)
         
     def get_review_from_anime(self, driver, anime:str)->dict:
         self.driver.execute_script(f"window.scrollTo(0, {driver.location['y']});")
         sleep(1)
         driver.find_element(By.CSS_SELECTOR, '.readmore a').click()
         sleep(1)
-        return {
+        res = {
             'anime':anime,
             'user':driver.find_element(By.CSS_SELECTOR, '.username a').text,
             'user_link':driver.find_element(By.CSS_SELECTOR, '.username a').get_attribute('href'),
@@ -68,3 +69,5 @@ class ReviewScraper(BaseScraper):
             'body':driver.find_element(By.CLASS_NAME, 'text').text.replace("\n", ""),
             'status':driver.find_element(By.CLASS_NAME, 'tag').text,
         }
+        print(f"{anime} (by {res['user']}): {res['rating']}/10")
+        return res
