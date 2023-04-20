@@ -132,3 +132,6 @@ dmypy.json
 controllers/club.py
 controllers/user.py
 hidden.py
+
+# Way too big files
+json/
