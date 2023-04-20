@@ -63,8 +63,9 @@ def get_reviews_from_animes()->None:
     This function will call the ReviewScraper() object to scrape 
     reviews from the scraped animes. This scraper will only retrieve 
     the top 'Recommended', 'Mixed Feelings', and 'Not Recommended' 
-    reviews while ignoring the reviews with preliminary tag on them 
-    (since preliminary means that the reviewer hasn't finished the anime).
+    reviews while ignoring the reviews with preliminary tag on them if
+    the anime has finished airing (since preliminary means that the reviewer 
+    hasn't finished the anime).
     '''
     animes = read_csv("./data/reviews/animes.csv", sep=";", index_col=0)
     ReviewScraper().scrape_from_animes(animes.to_dict('records'))

@@ -1,3 +1,4 @@
+from datetime import datetime
 from pandas import DataFrame, read_csv
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -18,7 +19,7 @@ class ReviewScraper(BaseScraper):
         self.mixed_feelings = '&filter_check=2&filter_hide=1%2C3'
         self.not_recommended = '&filter_check=3&filter_hide=1%2C2'
 
-    def scrape_from_animes(self, animes:list)->None:
+    def scrape_from_animes(self, animes:list, inverse=False)->None:
         super().init_checkpoint()
         for anime in animes:
             if anime['title'] in self.checkpoint['animes'] and self.checkpoint['current']!=anime['title']:
@@ -50,7 +51,7 @@ class ReviewScraper(BaseScraper):
         DataFrame().\
         from_dict([self.get_review_from_anime(review, anime) for review in reviews]).\
         to_csv(
-            './data/reviews/reviews3.csv', 
+            f'./data/reviews/reviews_{datetime.today().strftime("%m_%d_%Y")}.csv', 
             mode='a', sep=';', 
             header=0
         )
