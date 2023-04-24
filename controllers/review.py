@@ -43,7 +43,32 @@ class ReviewScraper(BaseScraper):
                 super().reset_checkpoint()
             except Exception:
                 pass
-            
+    
+    def scrape_more_reviews_from_animes(self, animes:list, rec:str, page:int)->None:
+        self.path = f'reviews/{rec}'
+        super().init_checkpoint()
+        arg = {
+            'recommended':self.recommended,
+            'mixed_feelings':self.mixed_feelings,
+            'not_recommended':self.not_recommended
+        }
+        for anime in animes:
+            if anime['title'] in self.checkpoint['animes'] and self.checkpoint['current']!=anime['title']:
+                continue
+            try:
+                # Start the scraping process
+                print(f"Start anime {anime['title']} page {page}")
+                self.start_checkpoint(anime['title'])
+                res = self.get_reviews_from_anime(
+                    anime['title'], 
+                    f"{anime['link']}/reviews?preliminary={anime['preliminary']}{arg[rec]}&p={page}"
+                )
+                print(f"Scraped {res} {rec} reviews for {anime['title']} page {page}")
+                print(f"Finish anime {anime['title']} page {page}")
+                self.reset_checkpoint()
+            except Exception:
+                pass            
+
     def get_reviews_from_anime(self, anime:str, link:str)->None:
         self.driver.get(link)
         sleep(5)
