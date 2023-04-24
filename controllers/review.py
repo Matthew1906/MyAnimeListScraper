@@ -57,14 +57,12 @@ class ReviewScraper(BaseScraper):
                 continue
             try:
                 # Start the scraping process
-                print(f"Start anime {anime['title']} page {page}")
                 self.start_checkpoint(anime['title'])
                 res = self.get_reviews_from_anime(
                     anime['title'], 
                     f"{anime['link']}/reviews?preliminary={anime['preliminary']}{arg[rec]}&p={page}"
                 )
                 print(f"Scraped {res} {rec} reviews for {anime['title']} page {page}")
-                print(f"Finish anime {anime['title']} page {page}")
                 self.reset_checkpoint()
             except Exception:
                 pass            
