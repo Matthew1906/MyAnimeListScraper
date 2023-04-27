@@ -48,7 +48,7 @@ def get_reviews_from_animes()->None:
     ReviewScraper().scrape_from_animes(animes.to_dict('records'))
 
  
-page = 15
+page = 22
 running = True
 while running: 
     for status in ['recommended', 'mixed_feelings', 'not_recommended']:  
