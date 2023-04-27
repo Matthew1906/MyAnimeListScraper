@@ -62,6 +62,8 @@ class ReviewScraper(BaseScraper):
                     anime['title'], 
                     f"{anime['link']}/reviews?preliminary={anime['preliminary']}{arg[rec]}&p={page}"
                 )
+                if res >=20 :
+                    DataFrame(data=[anime]).to_csv(f'./data/reviews/{rec}/{rec}_{page+1}.csv', mode='a', sep='$', header=0)
                 print(f"Scraped {res} {rec} reviews for {anime['title']} page {page}")
                 self.reset_checkpoint()
             except Exception:

@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from controllers import AnimeScraper, ReviewScraper
 from math import ceil
+from os import remove
 from pandas import read_csv
 from requests import get
 
@@ -46,6 +47,17 @@ def get_reviews_from_animes()->None:
     animes = read_csv("./data/reviews/animes.csv", sep=";", index_col=0)
     ReviewScraper().scrape_from_animes(animes.to_dict('records'))
 
-for status in ['recommended', 'mixed_feelings', 'not_recommended']:
-    animes = read_csv(f"./data/reviews/{status}/{status}_3.csv", sep='$', index_col=0)
-    ReviewScraper().scrape_more_reviews_from_animes(animes.to_dict('records'), status, 3)
+ 
+page = 15
+running = True
+while running: 
+    for status in ['recommended', 'mixed_feelings', 'not_recommended']:  
+        try:
+            animes = read_csv(f"./data/reviews/{status}/{status}_{page}.csv", sep='$', index_col=0, names=['title', 'link', 'preliminary'])
+            ReviewScraper().scrape_more_reviews_from_animes(animes.to_dict('records'), status, page)
+            remove(f'./data/reviews/{status}/checkpoint.json')
+        except FileNotFoundError:
+            running = False
+            break
+    page += 1
+    
