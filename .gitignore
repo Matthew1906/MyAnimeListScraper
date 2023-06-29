@@ -129,8 +129,7 @@ dmypy.json
 .pyre/
 
 # Not public file
-controllers/club.py
-controllers/user.py
+controllers/hidden
 hidden.py
 
 # Way too big files

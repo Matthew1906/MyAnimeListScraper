@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from controllers import AnimeScraper, ReviewScraper
+from controllers import AnimeScraper, ReviewScraper, UserScraper
 from math import ceil
 from os import remove
 from pandas import read_csv
@@ -48,16 +48,18 @@ def get_reviews_from_animes()->None:
     ReviewScraper().scrape_from_animes(animes.to_dict('records'))
 
  
-page = 22
-running = True
-while running: 
-    for status in ['recommended', 'mixed_feelings', 'not_recommended']:  
-        try:
-            animes = read_csv(f"./data/reviews/{status}/{status}_{page}.csv", sep='$', index_col=0, names=['title', 'link', 'preliminary'])
-            ReviewScraper().scrape_more_reviews_from_animes(animes.to_dict('records'), status, page)
-            remove(f'./data/reviews/{status}/checkpoint.json')
-        except FileNotFoundError:
-            running = False
-            break
-    page += 1
+# page = 22
+# running = True
+# while running: 
+#     for status in ['recommended', 'mixed_feelings', 'not_recommended']:  
+#         try:
+#             animes = read_csv(f"./data/reviews/{status}/{status}_{page}.csv", sep='$', index_col=0, names=['title', 'link', 'preliminary'])
+#             ReviewScraper().scrape_more_reviews_from_animes(animes.to_dict('records'), status, page)
+#             remove(f'./data/reviews/{status}/checkpoint.json')
+#         except FileNotFoundError:
+#             running = False
+#             break
+#     page += 1
     
+locations = ['Indonesia', 'Malaysia', 'Singapore', 'Thailand', 'Vietnam', 'Manila', 'Germany', 'France']
+UserScraper('watchlists', 'locations').scrape_from_locations(locations)
