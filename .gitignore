@@ -134,3 +134,4 @@ hidden.py
 
 # Way too big files
 json/
+data/watchlists/logs*.txt

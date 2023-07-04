@@ -1,9 +1,10 @@
 from bs4 import BeautifulSoup
-from controllers import AnimeScraper, ReviewScraper, UserScraper
+from controllers import AnimeScraper, ReviewScraper, UserScraper, WatchlistScraper
 from math import ceil
 from os import remove
 from pandas import read_csv
 from requests import get
+from os import getenv
 
 # Globals
 BASE_URL = 'https://myanimelist.net'
@@ -60,6 +61,13 @@ def get_reviews_from_animes()->None:
 #             running = False
 #             break
 #     page += 1
-    
-locations = ['Indonesia', 'Malaysia', 'Singapore', 'Thailand', 'Vietnam', 'Manila', 'Germany', 'France']
-UserScraper('watchlists', 'locations').scrape_from_locations(locations)
+
+def get_users_by_locations()->None:
+    locations = ['Indonesia', 'Malaysia', 'Singapore', 'Thailand', 'Vietnam', 'Manila', 'Germany', 'France']
+    UserScraper('watchlists', 'locations').scrape_from_locations(locations)
+
+def get_watchlists()->None:
+    users = read_csv("./data/watchlists/users.csv", sep=";", index_col=0)
+    WatchlistScraper().get_watchlists(users.to_dict('records'))
+
+get_watchlists()
