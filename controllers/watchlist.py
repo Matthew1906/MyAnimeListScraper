@@ -9,9 +9,6 @@ class WatchlistScraper(BaseScraper):
     """
     A class used to represent the Watchlist Scraper, inherits the BaseScraper.
 
-    Methods
-    -------
-    
     """
     def __init__(self):
         super().__init__('watchlists', 'users')

@@ -10,8 +10,14 @@ class ReviewScraper(BaseScraper):
 
     Methods
     -------
-    scrape_reviews(url:str)->None
-        Scrape reviews
+    scrape_from_animes(animes:list)->None
+        Scrape reviews from animes
+    scrape_more_reviews_from_animes(animes:list, rec:str, page:int)->None
+        Scrape the next pages of anime reviews
+    get_reviews_from_anime(self, anime:str, link:str)->None:
+        Get the reviews from the visited page and save them into a file
+    get_review_from_anime(self, driver, anime:str)->dict:
+        Get review data from the HTML tag and return a dictionary of review data    
     """
     def __init__(self):
         super().__init__('reviews', 'animes')
@@ -19,7 +25,17 @@ class ReviewScraper(BaseScraper):
         self.mixed_feelings = '&filter_check=2&filter_hide=1%2C3'
         self.not_recommended = '&filter_check=3&filter_hide=1%2C2'
 
-    def scrape_from_animes(self, animes:list, inverse=False)->None:
+    def scrape_from_animes(self, animes:list)->None:
+        '''Scrape reviews from animes
+        
+        This method will loop each anime page three times to get all 
+        three types of reviews (recommended, mixed feelings, not recommended)
+
+        Parameters
+        ----------
+        animes : list
+            list of dictionaries containing anime name and link to the anime page
+        '''
         super().init_checkpoint()
         for anime in animes:
             if anime['title'] in self.checkpoint['animes'] and self.checkpoint['current']!=anime['title']:
@@ -45,6 +61,23 @@ class ReviewScraper(BaseScraper):
                 pass
     
     def scrape_more_reviews_from_animes(self, animes:list, rec:str, page:int)->None:
+        '''Scrape the next pages of anime reviews
+        
+        This method will scrape even more reviews from a list of animes.
+        The animes are selected based on the number of previously
+        scraped reviews of that anime. If there are 20 reviews, I 
+        assumed that there are more (since the limit per page is
+        20 reviews)
+
+        Parameters
+        ----------
+        animes : list
+            list of dictionaries containing anime name and link to the anime page
+        rec : str
+            label of the reviews (recommended, mixed feelings, not recommended)
+        page : int
+            page number of the review page
+        '''
         self.path = f'reviews/{rec}'
         super().init_checkpoint()
         arg = {
@@ -70,6 +103,20 @@ class ReviewScraper(BaseScraper):
                 pass            
 
     def get_reviews_from_anime(self, anime:str, link:str)->None:
+        '''Get the reviews from the visited page and save them into a file
+        
+        This method will visit the anime link and get the information 
+        of each HTML tags containing the review information. 
+        The method will then call another function to get the review 
+        and store them into a CSV file.
+
+        Parameters
+        ----------
+        anime : str
+            title of the anime
+        link : str
+            URL to the individual anime page
+        '''
         self.driver.get(link)
         sleep(5)
         reviews = self.driver.find_elements(By.CLASS_NAME, 'review-element')
@@ -83,6 +130,23 @@ class ReviewScraper(BaseScraper):
         return len(reviews)
         
     def get_review_from_anime(self, driver, anime:str)->dict:
+        '''Get review data from the HTML tag and return a dictionary of review data 
+        
+        This method will scroll the page into the location of the HTML 
+        tag and scrape all necessary anime review information
+
+        Parameters
+        ----------
+        driver : WebElement
+            instance of the review element
+        anime : str
+            anime title
+
+        Returns
+        -------
+        info : dict
+            review information
+        '''
         self.driver.execute_script(f"window.scrollTo(0, {driver.location['y']});")
         sleep(1)
         driver.find_element(By.CSS_SELECTOR, '.readmore a').click()

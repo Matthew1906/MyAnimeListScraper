@@ -63,10 +63,25 @@ def get_reviews_from_animes()->None:
 #     page += 1
 
 def get_users_by_locations()->None:
+    '''
+    Scrape users by locations
+
+    This function will call the UserScraper() object to scrape 
+    users by locations listed in the array.
+    '''
     locations = ['Indonesia', 'Malaysia', 'Singapore', 'Thailand', 'Vietnam', 'Manila', 'Germany', 'France']
     UserScraper('watchlists', 'locations').scrape_from_locations(locations)
 
 def get_watchlists()->None:
+    '''
+    Scrape user's animelist
+
+    This function will call the WatchlistScraper() object to scrape 
+    each user's animelist data. The scraped data will be stored in a
+    CSV file that is named based on the time of scraping. There are 
+    also some animelist that cannot be scraped (edge cases) due to 
+    personalized anime watchlists.
+    '''
     users = read_csv("./data/watchlists/users.csv", sep=";", index_col=0)
     WatchlistScraper().get_watchlists(users.to_dict('records'))
 

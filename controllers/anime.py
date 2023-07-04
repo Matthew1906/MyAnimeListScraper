@@ -25,8 +25,9 @@ class AnimeScraper(BaseScraper):
         """
         Scrape Animes
 
-        This method will loop through each genres, access each page, go to the individual anime webpage, scrape all important information 
-        of the anime, and save them to the CSV file.
+        This method will loop through each genres, access each page, 
+        go to the individual anime webpage, scrape all important 
+        information of the anime, and save them to the CSV file.
 
         Parameters
         ----------
@@ -65,7 +66,8 @@ class AnimeScraper(BaseScraper):
 
     def get_items(self)->list:
         ''' 
-        Get all anime titles and links in a page and formats them into a list of dictionaries.
+        Get all anime titles and links in a page and formats them 
+        into a list of dictionaries.
         
         Returns
         -------
@@ -92,7 +94,7 @@ class AnimeScraper(BaseScraper):
         link : str
             URL to the individual anime page
         title : str
-            Title of the Anime
+            title of the Anime
 
         Returns
         -------
