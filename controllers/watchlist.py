@@ -9,6 +9,12 @@ class WatchlistScraper(BaseScraper):
     """
     A class used to represent the Watchlist Scraper, inherits the BaseScraper.
 
+    Methods
+    -------
+    get_watchlists(users:list)->None
+        Get all watchlists from a list of users 
+    get_watchlist(self, username:str, link:str, length:int)->bool
+        Get watchlist data 
     """
     def __init__(self):
         super().__init__('watchlists', 'users')
@@ -19,7 +25,18 @@ class WatchlistScraper(BaseScraper):
             filemode="w"
         )
         
-    def get_watchlists(self, users:dict)->None:
+    def get_watchlists(self, users:list)->None:
+        '''Get all watchlists from a list of users 
+        
+        This method will loop through a list of users, check if the 
+        user has put animes in the animelist, and scrape animelist
+        information if the user has a watchlist.
+
+        Parameters
+        ----------
+        users : str
+            list of users
+        '''
         super().init_checkpoint()
         for user in users:
             if user['user'] in self.checkpoint['users'] and self.checkpoint['current']!=user['user']:
@@ -54,6 +71,26 @@ class WatchlistScraper(BaseScraper):
             super().reset_checkpoint()
 
     def get_watchlist(self, username:str, link:str, length:int)->bool:
+        '''Get watchlist data 
+        
+        This method will open the page containing the user's watchlist, 
+        scroll until the end of the page, and scrape all user's animelist
+        information. 
+
+        Parameters
+        ----------
+        username : str
+            username that owns the animelist
+        link : str
+            link to the watchlist
+        length: int
+            estimated length of the watchlist (number of animes watched)
+
+        Returns
+        -------
+        status : bool
+            scraping status        
+        '''
         sleep(5)
         self.driver.get(link)
         last_idx = 0
