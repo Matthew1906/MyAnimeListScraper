@@ -65,10 +65,12 @@ class WatchlistScraper(BaseScraper):
                     status = f"No watchlist from {user['user']}"
                     print(status)
                     logging.warning(status)
+                super().reset_checkpoint()
             except Exception:
-                logging.error(f"Unable to get watchlist from {user['user']}")
+                status = f"Unable to get watchlist from {user['user']}"
+                print(status)
+                logging.error(status)
             sleep(2)
-            super().reset_checkpoint()
 
     def get_watchlist(self, username:str, link:str, length:int)->bool:
         '''Get watchlist data 
