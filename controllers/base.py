@@ -1,5 +1,6 @@
 from json import dump, load
 from selenium.webdriver import Chrome, ChromeOptions
+from webdriver_manager.chrome import ChromeDriverManager
 
 class BaseScraper:
     """
@@ -50,7 +51,7 @@ class BaseScraper:
         options = ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         options.add_argument("--headless")
-        self.driver = Chrome(options=options)
+        self.driver = Chrome(ChromeDriverManager().install(), options=options)
         self.driver.maximize_window()
         self.path = path
         self.filters = filters
