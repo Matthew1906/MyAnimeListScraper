@@ -156,7 +156,7 @@ class ReviewScraper(BaseScraper):
             'user':driver.find_element(By.CSS_SELECTOR, '.username a').text,
             'user_link':driver.find_element(By.CSS_SELECTOR, '.username a').get_attribute('href'),
             'rating':driver.find_element(By.CSS_SELECTOR, '.rating span').text,
-            'body':driver.find_element(By.CLASS_NAME, 'text').text.replace("\n", ""),
+            'body':driver.find_element(By.CLASS_NAME, 'text').text.replace("\n", " "),
             'status':driver.find_element(By.CLASS_NAME, 'tag').text,
         }
         print(f"{anime} (by {res['user']}): {res['rating']}/10")

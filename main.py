@@ -85,4 +85,4 @@ def get_watchlists()->None:
     users = read_csv("./data/watchlists/users.csv", sep=";", index_col=0)
     WatchlistScraper().get_watchlists(users.to_dict('records'))
 
-get_watchlists()
+get_reviews_from_animes()
