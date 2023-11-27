@@ -58,7 +58,7 @@ def get_reviews_from_animes()->None:
 #             ReviewScraper().scrape_more_reviews_from_animes(animes.to_dict('records'), status, page)
 #             remove(f'./data/reviews/{status}/checkpoint.json')
 #         except FileNotFoundError:
-#             running = False
+#             running = Falsedata/images
 #             break
 #     page += 1
 
