@@ -48,7 +48,7 @@ def get_reviews_from_animes()->None:
     animes = read_csv("./data/reviews/animes.csv", sep=";", index_col=0)
     ReviewScraper().scrape_from_animes(animes.to_dict('records'))
 
- 
+
 # page = 22
 # running = True
 # while running: 
